@@ -1,0 +1,35 @@
+Here are some of the most common DOS interrupts along with their functions:
+
+
+//INT 21H MOST IMP
+1. **INT 21H**:
+   - Function 09H: Display string.
+   - Function 01H: Read character from standard input.
+   - Function 02H: Write character to standard output.
+   - Function 4CH: Terminate program.
+
+2. **INT 10H**:
+   - Function 00H: Set video mode.
+   - Function 01H: Set cursor position.
+   - Function 02H: Get cursor position and shape.
+   - Function 03H: Get light pen position.
+   - Function 05H: Set active display page.
+
+3. **INT 16H**:
+   - Function 00H: Read character with echo.
+   - Function 01H: Read character without echo.
+   - Function 02H: Check for keystroke.
+   - Function 05H: Write character to standard output.
+
+4. **INT 33H** (mouse services):
+   - Function 00H: Reset mouse.
+   - Function 01H: Show mouse cursor.
+   - Function 02H: Hide mouse cursor.
+   - Function 03H: Get mouse position and button status.
+   - Function 04H: Set mouse position.
+
+5. **INT 14H** (serial port services):
+   - Function 00H: Initialize serial port.
+   - Function 01H: Send character to serial port.
+   - Function 02H: Receive character from serial port.
+
