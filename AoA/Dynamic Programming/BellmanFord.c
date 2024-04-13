@@ -1,38 +1,56 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#define SIZE 5
+int graph[SIZE][SIZE] = {
+    {0, 6, 0, 7, 0},  // a
+    {0, 0, 5, 8, -4}, // b
+    {0, -2, 0, 0, 0}, // c
+    {0, 0, -3, 0, 9}, // d
+    {2, 0, 7, 0, 0}   // e
+};
+int distance[SIZE], parent[SIZE];
+int inf = 999;
 
-#define INF 99999
-
-typedef struct {
-    int d;  // Shortest distance estimate
-    int pi; // Parent
-} Vertex;
-
-// Function to initialize single source
-void InitializeSingleSource(Vertex G[], int n, int s) {
-    // Initialize shortest distance estimates and predecessors
-    for (int i = 0; i < n; i++) {
-        G[i].d = INF; // Infinity
-        G[i].pi = -1; // NIL
-    }
-    G[s].d = 0;  // Set distance of source vertex to 0
-}
-
-void Relax(Vertex* u, Vertex* v, int w) {
-    if (v->d > u->d + w) {
-        v->d = u->d + w;  // Update shortest distance estimate of v
-        v->pi = u->pi;    // Update parent of v
+void printResults() {
+    printf("Vertex\tDist\tParent\n");
+    for (int i = 0; i < SIZE; i++) {
+        printf("%d\t%d\t%d\n", i, distance[i], parent[i]);
     }
 }
 
-void BellmanFord(Vertex G[],int w,int s){
-    InitializeSingleSource(G,s);
-    for(int i=1;G.Vertex-1)
-
+void initializeSingleSource() {
+    for (int i = 0; i < SIZE; i++) {
+        distance[i] = inf;
+        parent[i] = -1;
+    }
+    distance[0] = 0;
 }
 
-int main(){
-    BellmanFord();
+void relaxEdges() {
+    for (int u = 0; u < SIZE; u++) {
+        for (int v = 0; v < SIZE; v++) {
+            if (graph[u][v] != 0 && distance[v] > distance[u] + graph[u][v]) {
+                distance[v] = distance[u] + graph[u][v];
+                parent[v] = u;
+            }
+        }
+    }
+}
+
+int main() {
+    initializeSingleSource();
+    for (int i = 0; i < SIZE - 1; i++) {
+        relaxEdges();
+    }
+    // Perform one more iteration to check for negative cycles
+    for (int u = 0; u < SIZE; u++) {
+        for (int v = 0; v < SIZE; v++) {
+            if (graph[u][v] != 0 && distance[v] > distance[u] + graph[u][v]) {
+                printf("Negative cycle detected!\n");
+                return 0;
+            }
+        }
+    }
+    printf("No negative cycle detected.\n");
+    printResults();
     return 0;
 }
