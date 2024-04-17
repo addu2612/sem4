@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-//Some error when printing the values of min_colours.CHECK
+#define MAX_VERTICES 100
 
-int colours[100];
-int graph[100][100];
+int colours[MAX_VERTICES];
+int graph[MAX_VERTICES][MAX_VERTICES];
 int n_vertices; //number of vertices
-int n_edges;     //number of edges
+int n_edges;   //number of edges
 
 bool isValid(int vertex, int colour) {
     for (int i = 0; i < n_vertices; i++) {
@@ -20,65 +20,64 @@ bool isValid(int vertex, int colour) {
     return true;
 }
 
-
-bool graphColouring(int vertex) {
-    // if we reach the last vertex, it means all colours have been assigned
-    if (vertex == n_vertices) {
-        return true;
-    }
-    // we use colors 1 to m, 0 is no color
-    for (int i = 1; i <= n_vertices; i++) {
-        if (isValid(vertex, i)) {
-            colours[vertex] = i;
-            if (graphColouring(vertex + 1)) // true is returned continuously till some node, ensures that color can be placed till current node
-            {
-                return true;
+int graphColouring() {
+    int min_colours = 0; // Initialize the minimum number of colors used
+    for (int vertex = 0; vertex < n_vertices; vertex++) { 
+        int available[MAX_VERTICES + 1]; // We add one extra slot for colors (from 1 to n_vertices)
+        for (int i = 0; i <= n_vertices; i++) { 
+            // Initialize all colors as available
+            available[i] = true;
+        }
+        for (int i = 0; i < vertex; i++) { 
+            // Check adjacent vertices and mark their colors as unavailable
+            if (graph[vertex][i] && colours[i] != -1) {
+                available[colours[i]] = false;
             }
-            //if false is returned by v+1 then the given v is assigned invalid color so reset and try other colors
-            colours[vertex] = 0;
+        }
+        int color;
+        for (color = 1; color <= n_vertices; color++) { 
+            // Find the lowest available color
+            if (available[color]) {
+                break;
+            }
+        }
+        colours[vertex] = color; // Assign the lowest available color to the vertex
+        if (color > min_colours) { 
+            // Update the minimum number of colors used
+            min_colours = color;
         }
     }
-    return false;
+    return min_colours; 
 }
 
+
 int main() {
-    int i, j;
     printf("Graph Colouring Algorithm\n");
-    printf("Enter number of vertices:");
+    printf("Enter number of vertices: ");
     scanf("%d", &n_vertices);
-    printf("Enter number of edges:");
+    printf("Enter number of edges: ");
     scanf("%d", &n_edges);
 
-    //initialize colours and graph to 0
-    for (i = 0; i < n_vertices; i++) {
-        colours[i] = 0;
+    for (int i = 0; i < n_vertices; i++) {
+        colours[i] = -1;
         for (int j = 0; j < n_vertices; j++) {
             graph[i][j] = 0;
         }
     }
 
-    //mark valid edges 1
-    for (i = 0; i < n_edges; i++) {
+    for (int i = 0; i < n_edges; i++) {
         int u, v;
-        printf("Enter the edge %d (both vertices) : ", i + 1);
+        printf("Enter edge %d (both vertices): ", i + 1);
         scanf("%d %d", &u, &v);
         graph[u][v] = graph[v][u] = 1;
     }
 
-    // Find the minimum number of colors needed
-    int min_colours = 1;
-    while (!graphColouring(0)) {
-        min_colours++;
-        for (int i = 0; i < n_vertices; i++) {
-            colours[i] = 0; // Reset colours for the next attempt
-        }
-    }
+    int min_colours = graphColouring();
 
-
-    printf("The vertices can be coloured with %d colours\n", min_colours);
-    printf("Vertices \t Colours\n");
-    for (i = 0; i < n_vertices; i++) {
-        printf("Vertex %d :\t%d\n", i, colours[i]);
+    printf("The minimum number of colors needed: %d\n", min_colours);
+    printf("Vertices\tColours\n");
+    for (int i = 0; i < n_vertices; i++) {
+        printf("Vertex %d:\t%d\n", i, colours[i]);
     }
 
     return 0;
