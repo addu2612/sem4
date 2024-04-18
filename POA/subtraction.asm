@@ -6,6 +6,7 @@ SUB AX,BX      ; Subtract the value of BX from AX, storing the result in AX
 MOV [1004h],AX ; Move the contents of AX into memory address 1004h
 JNC jump       ; Jump to the label 'jump' if the Carry Flag is not set
 INC CL         ; Increment the value in the CL register
+;Performing 2s complement
 NOT AX         ; Bitwise NOT operation on AX (complement each bit)
 ADD AX,0001h   ; Add 1 to the value in AX
 jump:          ; Label 'jump', the destination of the conditional jump instruction
