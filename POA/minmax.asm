@@ -27,7 +27,6 @@ REPEAT:
 CHECKMAX:
     CMP MAX, AL    ; Compare MAX with AL
     JG DONE        ; Jump to DONE if AL is greater than MAX
-
     MOV MAX, AL    ; Update MAX if AL is greater
 
 DONE:
