@@ -3,9 +3,12 @@ Here are some of the most common DOS interrupts along with their functions:
 
 //INT 21H MOST IMP
 1. **INT 21H**:
-   - Function 09H: Display string.
-   - Function 01H: Read character from standard input.
-   - Function 02H: Write character to standard output.
+   - Function 01H: Take single input character through a keyboard.
+   - Function 02H: Display a character.
+   - Function 08H: Character input without echo
+   - Function 09H: Display string thats terminated by "$". 
+   - Function 40H: Another way to display a string.
+   - Function 0AH: Reading a string.
    - Function 4CH: Terminate program.
 
 2. **INT 10H**:
