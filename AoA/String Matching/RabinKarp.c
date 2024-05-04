@@ -6,7 +6,11 @@
 void RK(const char T[], const char P[], int d, int q) {
     int n = strlen(T);
     int m = strlen(P);
-    int h = d ^ m - 1 % q;
+    //int h = d ^ (m - 1) % q;
+    int h = 1;
+    for (int i = 0; i < m - 1; i++) {
+        h = (h * d) % q;
+    }
     int p = 0, t = 0;
     int ts = 0; // Variable to keep track of ts
 
