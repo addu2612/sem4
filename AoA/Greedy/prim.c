@@ -14,13 +14,16 @@ void initialize(int n) {
     for (i = 0; i < n; i++) {
         list[nodes[i]] = 0;
         distance[nodes[i]] = INFINITY;
-        parent[nodes[i]] = INFINITY;
+        parent[nodes[i]] = -1;
     }
     distance[nodes[0]] = 0;
 }
 
 void relax(int u, int v) {
-    distance[v] = (distance[v] > distance[u] + cost[u][v]) ? distance[u] + cost[u][v] : distance[v];
+    if (distance[v] > cost[u][v]) {
+        distance[v] = cost[u][v];
+        parent[v] = u;
+    }
 }
 
 int extractMin(int n) {
@@ -44,7 +47,7 @@ void prims(int n) {
     while (u != -1) {
         for (i = 0; i < n; i++) {
             if (cost[u][nodes[i]] != INFINITY && list[nodes[i]] != 1) {
-                distance[nodes[i]] = cost[u][nodes[i]];
+                relax(u, nodes[i]); 
             }
         }
         u = extractMin(n);
@@ -76,9 +79,10 @@ int main() {
     
     initialize(n);
     prims(n);
-    printf("The final distances are:\n");
+    printf("The final table is:\n");
+    printf("distance\tparent\n");
     for (i = 0; i < n; i++) {
-        printf("%d\t", distance[nodes[i]]);
+        printf("%d\t %d \n", distance[nodes[i]],parent[nodes[i]]);
     }
     return 0;
 }
