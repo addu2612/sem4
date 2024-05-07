@@ -20,18 +20,19 @@ def lru():
     hits, faults = 0, 0
     frame = []
     for p in pages:
-        if p in frame:
-            hits += 1
-            frame.remove(p)
-            frame.append(p)
-        elif len(frame) < 3:
+        if len(frame)<3:
             frame.append(p)
             faults += 1
         else:
-            frame.pop(0)
-            frame.append(p)
-            faults += 1
-    return hits, faults
+            if p in frame:
+                hits += 1
+                frame.remove(p)
+                frame.append(p)
+            else:
+                frame.pop(0)
+                frame.append(p)
+                faults += 1
+    return hits,faults 
 
 def opt():
     hits, faults = 0, 0
