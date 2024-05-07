@@ -1,93 +1,93 @@
-#Restoring Divison of Unsigned Numbers
-
-# Function to compute the two's complement of a binary number
-def twosComplement(num):
-    onesComp = ""
-    # Invert each bit in the binary number
-    for i in num:
-        if i == "0":
-            onesComp += "1"
+def add(x,y):
+    max_len=max(len(x),len(y))
+    result=""
+    carry=0
+    for i in range(max_len-1,-1,-1):
+        r=carry
+        if x[i]=="1":
+            r+=1
+        if y[i]=="1":
+            r+=1
+        if r%2 ==1:
+            result="1"+result
         else:
-            onesComp += "0"
-    # Add 1 to the inverted binary number to get the two's complement
-    return bin(int(onesComp, 2) + int("1", 2)).replace('0b', "")
+            result="0"+result
+        if r<2:
+            carry=0
+        else:
+            carry=1
+    return result
 
-# Taking input for the dividend and divisor
+def twoc(num):
+    l=list(num)
+    for i in range(len(l)):
+        if l[i]=="0":
+            l[i]="1"
+        else:
+            l[i]="0"
+    b="0"*(len(l)-1)+"1"
+    return add("".join(l),b)
+
 num1 = int(input('Enter dividend: '))
 num2 = int(input('Enter divisor: '))
 
-# Convert the absolute values of the numbers to binary and remove the '0b' prefix
-binNum1 = bin(abs(num1)).replace("0b", '')
-binNum2 = bin(abs(num2)).replace("0b", '')
+a=bin(num1).replace("0b","")
+b=bin(num2).replace("0b","")
 
-# Determine the maximum length of the binary numbers
-maxlen = max(len(binNum1), len(binNum2))
+maxlen=max(len(a),len(b))
 
-# Fill the binary numbers with leading zeros to make them of equal length
-binNum1 = binNum1.zfill(maxlen)
-binNum2 = binNum2.zfill(maxlen + 1)
+a=a.zfill(maxlen)
+b=b.zfill(maxlen+1)
 
-# Calculate the two's complement of the divisor
-binCompNum2 = twosComplement(binNum2)
-binCompNum2 = binCompNum2.zfill(maxlen)
+b2c=twoc(b)
+b2c=b2c.zfill(maxlen)
 
-# Initialize variables for the algorithm
-count = maxlen
-m = binNum2
-minusm = binCompNum2
-q = binNum1
-a = "0"
-a = a.zfill(maxlen + 1)
-leftshift = ""
+count=maxlen
+Mp=b
+Mn=b2c
+Q=a
+AC="0"
+AC=AC.zfill(maxlen+1)
 
-# Print the table header
-print("Count" + " " * maxlen + "A" + " " * maxlen + "Q" + " " * (maxlen + 1) + "M" + " " * (maxlen + 1) +
-      "M2" + " " * (maxlen + 1) + "A+M2" + " " * (maxlen + 1) + "Left Shift")
+leftshift=""
 
-# Main loop for the division algorithm
-while count > 0:
-    # Merge A and Q for left-shifting
-    merged = a + q
-    leftshift = merged[1:]
-    a = leftshift[:maxlen + 1]
+print("Count" + " " * maxlen + "M" + " " * (maxlen + 1) + "AC" + " " * (maxlen+1) + "Q" + " " * (maxlen) +
+       "Operation")
+print(str(count)+ " " * maxlen + Mp + " " * (maxlen + 1) + AC + " " * (maxlen+1) + Q + " " * (maxlen) +
+       "Init.")
 
-    # Subtract M or -M from A based on the first bit of A
-    a = bin(int(a, 2) + int(minusm, 2)).replace("0b", "")
-    if len(a) > maxlen + 1:
-        a = a[1:]
-    a = a.zfill(maxlen + 1)
 
-    # Determine the next bit of Q and update A and Q
-    if a[0] == "0":
-        leftshift = a + q[1:]
-        leftshift += "1"
+while count>0:
+    merged =AC+Q
+    leftshift=merged[1:]
+    AC=leftshift[:maxlen+1]
+    Op="LS AQ"
+
+    AC=add(AC,Mn)
+    if len(AC)>maxlen+1:
+        AC=AC[1:]
+    AC=AC.zfill(maxlen+1)
+
+    if AC[0]=="0":
+        leftshift=AC+Q[1:]
+        leftshift+="1"
+        Op="Q0=1"
     else:
-        a = bin(int(a, 2) + int(m, 2)).replace("0b", "")
-        if len(a) > maxlen + 1:
-            a = a[1:]
-        a = a.zfill(maxlen + 1)
-        leftshift = a + q[1:]
-        leftshift += "0"
+        AC=add(AC,Mp)
+        if(len(AC)>maxlen+1):
+            AC=AC[1:]
+        AC=AC.zfill(maxlen+1)
+        leftshift=AC+Q[1:]
+        leftshift+="0"
+        Op="Q0=0 Restore AC"
 
-    a = leftshift[:maxlen + 1]
-    q = leftshift[maxlen + 1:]
-    count -= 1
+    AC=leftshift[:maxlen+1]
+    Q=leftshift[maxlen+1:]
+    count=count-1
 
-    # Calculate M2 and A+M2
-    M2 = twosComplement(m).zfill(maxlen + 1)
-    AM2 = bin(int(a, 2) + int(M2, 2)).replace("0b", "").zfill(maxlen + 1)
-
-    # Print the current state of the algorithm
-    print(str(count) + " " * maxlen + a + " " * maxlen + q + " " * (maxlen + 1) + m + " " * (
-            maxlen + 1) + binCompNum2 + " " * (maxlen + 1) + AM2 + " " * (maxlen + 1) + leftshift)
-
-# If the final result is negative, add M to A
-if a[0] == "1":
-    a = bin(int(a, 2) + int(m, 2)).replace("0b", "")
-    if len(a) > maxlen + 1:
-        a = a[1:]
-
-# Print the final result
+    print(str(count)+ " " * maxlen + Mp + " " * (maxlen + 1) + AC + " " * (maxlen+1) + Q + " " * (maxlen) +
+       Op)
+        
 print("\nResult:")
-print("Quotient:", int(q, 2))
-print("Remainder:", int(a, 2))
+print("Quotient:", int(Q, 2))
+print("Remainder:", int(AC, 2))
