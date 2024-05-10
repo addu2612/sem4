@@ -1,39 +1,41 @@
-;A program in assembly language to calculate the average of numbers in an array.
 DATA SEGMENT
-     ARRAY DB 1,4,2,3,8,6,7,5,9
-     AVG DB ?
-     MSG DB "AVERAGE = $"
-ENDS
+    ARR DB 1H,2H,3H,4H,5H,6H,7H,8H,9H
+    LEN DW $-ARR
+    SUM DW ?  
+    AVG DW ?  
+DATA ENDS
 
-CODE SEGMENT 
-    ASSUME DS:DATA CS:CODE
+CODE SEGMENT
+    ASSUME CS:CODE,DS:DATA
 START:
-      MOV AX,DATA
-      MOV DS,AX
-
-      LEA SI,ARRAY 
-      LEA DX,MSG
-      MOV AH,9
-      INT 21H
-
-      MOV AX,00
-      MOV BL,9
-
-      MOV CX,9 
-      LOOP1:
-           ADD AL,ARRAY[SI]
-           INC SI
-      LOOP LOOP1
-
-      DIV BL
-
-      ADD AL,30H
-
-      MOV DL,AL
-      MOV AH,2
-      INT 21H
-
-      MOV AH,4CH
-      INT 21H     
-ENDS
+    MOV AX,DATA
+    MOV DS,AX
+   
+    MOV CX,LEN
+    LEA SI,ARR
+   
+    MOV AX,0000H  
+    MOV BX,0000H  
+   
+SUM_LOOP:    
+    MOV BL,[SI]
+    ADD AX,BX    
+    INC SI
+    DEC CX
+    JNZ SUM_LOOP  
+   
+    MOV SUM,AX    
+   
+    MOV BX,0      
+    MOV BX,LEN    
+   
+    MOV AX,SUM    
+    DIV BL        
+   
+    MOV AVG,AX    
+   
+    MOV AH,4CH
+    INT 21H
+   
+    CODE ENDS
 END START
