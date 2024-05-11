@@ -1,59 +1,62 @@
 #include <stdio.h>
-#include <stdlib.h>
-
-int process_sizes[10];
-int mem_sizes[10];
-int visited[10];
-int mem_loc[10];
-int temp;
-
-int main(){
-int n_mem;
-printf("Enter number of memory partitions:\n");
-scanf("%d", &n_mem);
-
-for (int i = 0; i < n_mem; i++)
-{
-    printf("Enter size:");
-    scanf("%d", &mem_sizes[i]);
-}
-
-int n_proc;
-printf("Enter number of processes:\n");
-scanf("%d", &n_proc);
-
-for (int i = 0; i < n_proc; i++)
-{
-    printf("Enter size:");
-    scanf("%d", &process_sizes[i]);
-}
-
-for(int i=0;i<n_mem;i++){
-    visited[i]=0;
-    mem_loc[i]=-1;
-}
-
-int mem_index=0;
-for(int i=0;i<n_proc;i++){
-    int min_diff=9999;
-    for(int j=0;j<n_mem;j++){
-        if(mem_sizes[j]-process_sizes[i] && mem_sizes[j]-process_sizes[i]>=0 && visited[j]==0){
-            min_diff=mem_sizes[j]-process_sizes[i];
-            mem_loc[mem_index]=j;
+void bestFit(int blockSize[], int m, int processSize[], int n) {
+    int allocation[n];
+    int remainingMemory[m];
+    int occupied[m];
+    for (int i = 0; i < n; i++){
+        allocation[i] = -1;
+    }
+    for (int i = 0; i < m; i++){
+        remainingMemory[i] = blockSize[i];
+    }
+    
+    for(int i=0;i<m;i++){
+        occupied[i]=0;
+    }
+    
+    for (int i = 0; i < n; i++) {
+        int bestIdx = -1;
+        for (int j = 0; j < m; j++) {
+            if (blockSize[j] >= processSize[i] && !occupied[j] ) {
+                if (bestIdx == -1 || blockSize[bestIdx] > blockSize[j])
+                    bestIdx = j;
+                }
+            }
+        if (bestIdx != -1) {
+            allocation[i] = bestIdx;
+            occupied[bestIdx]=1;
+            blockSize[bestIdx] -= processSize[i];
+            remainingMemory[bestIdx] -= processSize[i];
         }
     }
-    visited[mem_loc[mem_index]]=1;
-    mem_index++;
+    printf("\nProcess No.\tProcess Size\tBlock no.\tRemaining Memory\n");
+    for (int i = 0; i < n; i++) {
+
+        printf(" %d\t\t\t%d\t\t\t", i+1, processSize[i]);
+        if (allocation[i] != -1)
+            printf("%d\t\t\t\t%d", allocation[i] + 1, remainingMemory[allocation[i]]);
+        else
+            printf("Not Allocated\t\t-");
+        printf("\n");
+    }
+}
+int main() {
+    int blockSize[100], processSize[100];
+    int m, n;
+    printf("Enter the number of memory blocks: ");
+    scanf("%d", &m);
+    printf("Enter the size of each memory block:\n");
+    for (int i = 0; i < m; i++)
+        scanf("%d", &blockSize[i]);
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+    printf("Enter the size of each process:\n");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &processSize[i]);
+    bestFit(blockSize, m, processSize, n);
+    return 0;
 }
 
-for(int i=0;i<n_proc;i++){
-    if(mem_loc[i]!=-1){
-        printf("Process size = %d goes in location %d\n",process_sizes[i],mem_sizes[mem_loc[i]]);
-    }
-    else{
-        printf("%d not allocated memory\n",process_sizes[i]);
-    }
-}
 
-return 0;
-}
+
+
