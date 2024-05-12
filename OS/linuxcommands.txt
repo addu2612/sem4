@@ -1,0 +1,80 @@
+1. Command: cd
+   Function: Change the current working directory.
+   Syntax: cd [directory_path]
+
+2. Command: ls
+   Function: List directory contents.
+   Syntax: ls [options] [directory]
+
+3. Command: pwd
+   Function: Print the current working directory.
+   Syntax: pwd
+
+4. Command: mkdir
+   Function: Create a new directory.
+   Syntax: mkdir [directory_name]
+
+5. Command: rm
+   Function: Remove files or directories.
+   Syntax: rm [options] [file/directory]
+
+6. Command: cp
+   Function: Copy files or directories.
+   Syntax: cp [options] [source] [destination]
+
+7. Command: mv
+   Function: Move or rename files or directories.
+   Syntax: mv [options] [source] [destination]
+
+8. Command: chmod
+   Function: Change file permissions.
+   Syntax: chmod [options] [permissions] [file]
+
+9. Command: chown
+   Function: Change file owner and group.
+   Syntax: chown [options] [owner:group] [file]
+
+10. Command: grep
+    Function: Search for patterns in files.
+    Syntax: grep [options] [pattern] [file(s)]
+
+11. Command: find
+    Function: Search for files and directories.
+    Syntax: find [directory] [options] [expression]
+
+12. Command: cat
+    Function: Concatenate and display files.
+    Syntax: cat [options] [file(s)]
+
+13. Command: head
+    Function: Display the beginning of a file.
+    Syntax: head [options] [file]
+
+14. Command: tail
+    Function: Display the end of a file.
+    Syntax: tail [options] [file]
+
+15. Command: tar
+    Function: Archive files.
+    Syntax: tar [options] [archive_file] [files/directories]
+
+16. Command: gzip
+    Function: Compress files.
+    Syntax: gzip [options] [file(s)]
+
+17. Command: unzip
+    Function: Extract files from a zip archive.
+    Syntax: unzip [options] [archive_file]
+
+18. Command: ssh
+    Function: Connect to a remote machine.
+    Syntax: ssh [user]@[hostname/IP_address]
+
+19. Command: scp
+    Function: Securely copy files between hosts.
+    Syntax: scp [options] [source_file] [destination_file]
+
+20. Command: sudo
+    Function: Execute a command as another user, typically as the root user.
+    Syntax: sudo [command]
+
