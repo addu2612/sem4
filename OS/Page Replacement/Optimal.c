@@ -1,85 +1,99 @@
 #include <stdio.h>
-int in(int, int[], int);
-int next(int, int, int[], int);
-int max(int[], int);
-void display(int[], int);
+#include <stdbool.h>
 
-int main(){
-    int nop, i, pages[30], frames;
-    printf("Enter the number of pages : ");
-    scanf("%d", &nop);
-    printf("Enter the pages : \n");
-    for (i = 0; i < nop; i++){
-        scanf("%d", &pages[i]);
-    }
-    printf("Enter the number of frames : ");
-    scanf("%d", &frames);
-    
-    int memory[10] , next_use[20];
-    int j, hits = 0;
-    for (int i = 0; i < frames; i++) {
-        memory[i] = -1;
-        next_use[i] = nop;
-    }
-    
-    for (int i = 0; i < nop; i++) {
-        j = in(pages[i], memory, frames);
-        if (j != -1) {
-            display(memory,frames);
-            hits++;
-        } 
-        else {
-            j = max(next_use, frames);
-            memory[j] = pages[i];
-            display(memory, frames);
-        }
-        for (int k = 0; k < frames; k++) {
-            next_use[k] = next(memory[k], i + 1, pages, nop);
+bool doesPageExist(int frame[], int nf, int page) {
+    for (int i = 0; i < nf; i++) {
+        if (frame[i] == page) {
+            return true;
         }
     }
-    printf("Total Hits: %d\n", hits);
-    printf("Hit ratio: %f\n", (double)hits / nop);
-    return 0;
+    return false;
 }
 
-int next(int x, int k, int arr[], int n) {
-    for (int i = k; i < n; i++) 
-    {
-        if (arr[i] == x)
-        return i;
-    }   
-    return n;
-}
-
-int max(int arr[], int n) {
-    int max = 0;
-    for (int i = 0; i < n; i++) {
-        if (arr[i] > arr[max])
-        max = i;
-    }
-    return max;
-}
-
-int in(int x, int arr[], int n){
-    for (int i = 0; i < n; i++){
-        if (arr[i] == x)
-        return i;
+int nextOccurrence(int pages[], int st, int end, int target) {
+    for (int i = st; i <= end; i++) {
+        if (pages[i] == target) {
+            return i;
+        }
     }
     return -1;
 }
 
-void display(int arr[], int n){
-    printf("[ ");
-    for (int i = 0; i < n; i++){
-        if (arr[i] != -1){
-            printf("%d ", arr[i]);
+void Optimal(int pages[], int np, int nf) {
+    int HitCount = 0, faultCount = 0;
+    int frames[100] = {0};
+
+    for (int i = 0; i < nf; i++) {
+        if (doesPageExist(frames, nf, pages[i])) {
+            HitCount++;
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < nf; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => HIT\n");
+        } else {
+            frames[i] = pages[i];
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < nf; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => FAULT\n");
+            faultCount++;
         }
-        else{
-            printf("_ ");
-        }
-        
     }
-    printf("]\n");
+
+    for (int i = nf; i < np; i++) {
+        if (doesPageExist(frames, nf, pages[i])) {
+            HitCount++;
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < nf; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => HIT\n");
+        } else {
+            int mostOptimal = -1;
+            int farthest = -1;
+            for (int j = 0; j < nf; j++) {
+                int occurrence = nextOccurrence(pages, i, np - 1, frames[j]);
+                if (occurrence == -1) {
+                    mostOptimal = j;
+                    break;
+                } else {
+                    if (occurrence > farthest) {
+                        farthest = occurrence;
+                        mostOptimal = j;
+                    }
+                }
+            }
+            frames[mostOptimal] = pages[i];
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < nf; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => FAULT\n");
+            faultCount++;
+        }
+    }
+
+    printf("Hit Ratio: %.2f%%\n", (float)HitCount / np * 100.0);
+    printf("Fault Ratio: %.2f%%\n", (float)faultCount / np * 100.0);
+    printf("Total Hits: %d\n", HitCount);
+    printf("Total Faults: %d\n", faultCount);
 }
 
+int main() {
+    int nf, np;
+    printf("Enter The Number Of Pages: ");
+    scanf("%d", &np);
 
+    printf("Enter The Number Of Frames: ");
+    scanf("%d", &nf);
+
+    int pages[np];
+    printf("Enter The Pages: ");
+    for (int i = 0; i < np; i++) {
+        scanf("%d", &pages[i]);
+    }
+    Optimal(pages, np, nf);
+    return 0;
+}

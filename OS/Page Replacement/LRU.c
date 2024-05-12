@@ -1,20 +1,19 @@
 #include <stdio.h>
-#include <stdbool.h>
 
 #define MAX_FRAMES 100
 
-bool doesPageExist(int page, int frames[], int noOfFrames) {
+int doesPageExist(int page, int frames[], int noOfFrames) {
     for (int i = 0; i < noOfFrames; i++) {
         if (frames[i] == page) {
-            return true; // Page exists
+            return 1;
         }
     }
-    return false; // Page doesn't exist
+    return 0;
 }
 
-int findLastOccurrenceInRange(int pages[], int st, int end, int target) {
-    for (int i = end; i >= st; i--) {
-        if (target == pages[i]) {
+int findLastOccurrenceInRange(int pages[], int start, int end, int page) {
+    for (int i = end; i >= start; i--) {
+        if (pages[i] == page) {
             return i;
         }
     }
@@ -27,12 +26,21 @@ void performLRU(int noOfPg, int pages[], int noOfFrames) {
     
     // Initializing frames with first page references
     for (int i = 0; i < noOfFrames; i++) {
-        frames[i] = pages[i];
-        printf("Page No %d --> Frame [", pages[i]);
-        for (int j = 0; j < noOfFrames; j++) {
-            printf("%d ", frames[j]);
+        if (doesPageExist(pages[i], frames, noOfFrames)) {
+            hitCount++;
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < noOfFrames; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => HIT\n");
+        } else {
+            frames[i] = pages[i];
+            printf("Page No %d --> Frame [", pages[i]);
+            for (int j = 0; j < noOfFrames; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("] => FAULT\n");
         }
-        printf("] => FAULT\n");
     }
 
     for (int i = noOfFrames; i < noOfPg; i++) {
@@ -62,28 +70,23 @@ void performLRU(int noOfPg, int pages[], int noOfFrames) {
         }
     }
 
-    printf("Hit Ratio: %.2f%%\n", (float)hitCount / noOfPg * 100.0);
-    printf("Fault Ratio: %.2f%%\n", (float)(noOfPg - hitCount) / noOfPg * 100.0);
     printf("Total Hits: %d\n", hitCount);
-    printf("Total Faults: %d\n", noOfPg - hitCount);
 }
 
 int main() {
-    int noOfPg, noOfFrames;
+    int noOfPg = 10;
+    int pages[] = {1, 2, 3, 4, 1, 2, 5, 1, 2, 3};
+    int noOfFrames = 3;
 
-    printf("Enter The Number Of Pages: ");
-    scanf("%d", &noOfPg);
-
-    printf("Enter The Number Of Frames: ");
-    scanf("%d", &noOfFrames);
-
-    int pages[noOfPg];
-
-    printf("Enter The Pages: ");
+    printf("Page Reference String: ");
     for (int i = 0; i < noOfPg; i++) {
-        scanf("%d", &pages[i]);
+        printf("%d ", pages[i]);
     }
+    printf("\n");
 
+    printf("Number of Frames: %d\n", noOfFrames);
+
+    printf("LRU Page Replacement:\n");
     performLRU(noOfPg, pages, noOfFrames);
 
     return 0;
