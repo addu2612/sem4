@@ -38,7 +38,7 @@ void main()
     if (dir == 'u')
     {
         // If direction is up
-        tot_movement = 2 * total - pos - req[0];
+        tot_movement= (total-pos)+(total-req[0]);
     }
     else if (dir == 'd')
     {

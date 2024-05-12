@@ -33,7 +33,7 @@ void main()
     else if (dir == 'd')
     {
         // Calculate total track movement in the 'd' (down) direction
-        tot_movement = pos - req[0];
+        tot_movement = pos - +req[n-1]-2*req[0];
     }
     printf("Total track movement = %d",tot_movement);
 }
