@@ -20,11 +20,8 @@ START:
     MOV CX, 03H     ; Set the loop counter CX to 3 (number of bytes to copy)
 
 X:
-    MOV AL, [SI]    ; Move the byte at SI into AL
-    MOV [DI], AL    ; Move the byte from AL into the memory location pointed to by DI
-
-    ;MOV AH, DS:[SI]
-    ;MOV ES:[DI], AH
+    MOV AH, DS:[SI]
+    MOV ES:[DI], AH
 
 
     INC SI          ; Increment SI to point to the next byte in SEG1
