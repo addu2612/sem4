@@ -19,9 +19,7 @@ UP1:
     MOV BL, [SI+1]   ; Move the byte at SI+1 into BL (second byte of the pair)
 
     CMP AL, BL       ; Compare AL and BL
-    JNC DOWN         ; Jump if not below or carry flag is not set (AL >= BL)
-
-    ;JC DOWN
+    JC DOWN
 
     MOV DL, [SI+1]   ; Move the second byte into DL
     XCHG [SI], DL    ; Swap the bytes
