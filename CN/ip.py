@@ -33,6 +33,6 @@ ip_add = ip.split('.')
 subnet_address = ""
 for i in range(len(mask)):
     a = int(mask[i])&int(ip_add[i])
-    subnet_address += str(a) + '.'
+    subnet_address += str(a) +('.' if i < len(mask) - 1 else '')
 
 print("Subnet Address: ",subnet_address)
